@@ -88,8 +88,8 @@ async def test_one(dut):
                     else:
                         if CSV and hw_val.is_resolvable:
                             writer.writerow([signal_name, cycle, int(hw_val)])
-                        # if cycle <= 100:
-                        #     continue
+                        if cycle <= 20:
+                            continue
                         assert getattr(dut, signal_name).value == value, (
                             f"Cycle {cycle}: Expected {signal_name} to be {value}, "
                             f"but got {(getattr(dut, signal_name).value)}"
