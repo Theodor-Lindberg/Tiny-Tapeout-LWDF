@@ -44,7 +44,7 @@ async def test_one(dut):
     dut._log.info("Start")
 
     # Set the clock period to 10 us (100 KHz)
-    clock = Clock(dut.clk, 10, unit="us")
+    clock = Clock(dut.clk, 20, unit="ns")
     cocotb.start_soon(clock.start())
 
     # Reset
