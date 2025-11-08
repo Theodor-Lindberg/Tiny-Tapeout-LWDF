@@ -10,7 +10,7 @@ from b_asic.quantization import QuantizationMode
 import apytypes as apy
 
 wl0 = 1
-wl1 = 7
+wl1 = 6
 
 a10 = float(apy.fx(0.4573, wl0, wl1))
 a11 = float(apy.fx(-0.2098, wl0, wl1))
@@ -100,7 +100,7 @@ lwdf
 from b_asic import Simulation, interleave, VhdlDataType
 from b_asic.signal_generator import Sinusoid
 
-dt = VhdlDataType(wl=(2, 5), quantization_mode=QuantizationMode.UNBIASED_ROUNDING)
+dt = VhdlDataType(wl=(2, 6))#, quantization_mode=QuantizationMode.UNBIASED_ROUNDING)
 sim = Simulation(lwdf, [0.25*Sinusoid(0.1)], dt)
 sim.run_for(500)
 
@@ -216,7 +216,7 @@ arch
 from b_asic import Simulation, interleave, VhdlDataType
 from b_asic.signal_generator import Sinusoid
 
-dt = VhdlDataType(wl=(2, 6), quantization_mode=QuantizationMode.UNBIASED_ROUNDING)
+dt = VhdlDataType(wl=(2, 6))#, quantization_mode=QuantizationMode.UNBIASED_ROUNDING)
 sim2 = Simulation(schedule.sfg, [0.25*Sinusoid(0.1)], dt)
 sim2.run_for(500)
 

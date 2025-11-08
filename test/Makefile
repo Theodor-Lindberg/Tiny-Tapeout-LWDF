@@ -1,11 +1,39 @@
 # Makefile
 # See https://docs.cocotb.org/en/stable/quickstart.html for more info
 
+# List your source files here:
+SOURCE_FILES =  in0.vhdl out0.vhdl memory0.vhdl memory1.vhdl memory2.vhdl memory3.vhdl memory4.vhdl sym2p0.vhdl sym2p1.vhdl lwdf.vhdl top.vhdl
+
+# Toplevel name of your VHDL project
+COCOTB_TOPLEVEL = tt_um_lwdf_top
+
+# Common
+WAVES = 1
+SRC_DIR = $(PWD)/../src
+
+ifeq ($(LIU), yes)
+$(info ************ Running simulation on LiU computer ************)
+ifeq ($(GATES),yes)
+$(warning ************ Gate level simulation selected but currently not set up on LiU computers ************)
+endif
+
+TOPLEVEL_LANG = vhdl
+SIM = ghdl
+VHDL_SOURCES = $(addprefix $(SRC_DIR)/,$(SOURCE_FILES))
+SIM_BUILD = sim_build
+SIM_ARGS += --vcd=$(SIM_BUILD)/tb.vcd
+EXTRA_ARGS += --workdir=$(SIM_BUILD) --work=work
+
+else
+
 # defaults
 SIM ?= icarus
 TOPLEVEL_LANG ?= verilog
-SRC_DIR = $(PWD)/../src
-PROJECT_SOURCES = generated/tt_um_lwdf.v generated/in0.v generated/out0.v generated/memory0.v generated/memory1.v generated/memory2.v generated/memory3.v generated/memory4.v generated/sym2p0.v generated/sym2p1.v
+
+# Change file extension from .vhdl to .v
+PROJECT_TARGETS_V = $(SOURCE_FILES:.vhdl=.v)
+# Prepend path for generated files
+PROJECT_SOURCES = $(addprefix generated/, $(PROJECT_TARGETS_V))
 
 ifneq ($(GATES),yes)
 
@@ -36,6 +64,8 @@ COMPILE_ARGS 		+= -I$(SRC_DIR)
 # Include the testbench sources:
 VERILOG_SOURCES += $(PWD)/tb.v
 TOPLEVEL = tb
+
+endif # !LIU
 
 # List test modules to run, separated by commas and without the .py suffix:
 COCOTB_TEST_MODULES = test

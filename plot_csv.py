@@ -70,7 +70,7 @@ def main() -> None:
         "csv_path",
         type=pathlib.Path,
         nargs="?",
-        default=pathlib.Path("lwdf_code/sim_build/waveform.csv"),
+        default=pathlib.Path("src/sim_build/waveform.csv"),
         help="Path to the CSV file.",
     )
     parser.add_argument(
