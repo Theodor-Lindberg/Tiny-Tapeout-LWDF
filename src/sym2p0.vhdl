@@ -36,6 +36,8 @@ architecture rtl of sym2p0 is
     signal mul_res : signed(u0'high + value'length downto 0);
     signal b0 : signed(mul_res'high + 1 downto 0);
     signal b1 : signed(mul_res'high + 1 downto 0);
+    signal b0_rounded : signed(mul_res'high + 1 downto 0);
+    signal b1_rounded : signed(mul_res'high + 1 downto 0);
 
 begin
     process(clk)
@@ -72,8 +74,13 @@ begin
     mul_res <= u0 * signed(value);
     b0 <= (resize(op_0, op_0'length + 1 + 2) & "000000") + resize(mul_res, b0'length);
     b1 <= (resize(op_1, op_1'length + 1 + 2) & "000000") + resize(mul_res, b1'length);
-    res_0 <= b1(b1'high - WL_VALUE_INT - 1 - 1 downto b1'high - WL_VALUE_INT - 1 - 1 - res_0'high);
-    res_1 <= b0(b0'high - WL_VALUE_INT - 1 - 1 downto b0'high - WL_VALUE_INT - 1 - 1 - res_1'high);
+    -- Rounding: add 0.5 (binary 0.1) at the MSB of truncated bits for round-to-nearest
+    -- The truncated bit position is at (b0'high - WL_VALUE_INT - 1 - 1 - res_0'high - 1)
+    -- Adding 2^(truncation_bit_pos) gives 0.5 in the fixed-point representation
+    b0_rounded <= b0 + to_signed(2**(b0'high - WL_VALUE_INT - 1 - 1 - res_0'high - 1), b0'length);
+    b1_rounded <= b1 + to_signed(2**(b1'high - WL_VALUE_INT - 1 - 1 - res_1'high - 1), b1'length);
+    res_0 <= b1_rounded(b1_rounded'high - WL_VALUE_INT - 1 - 1 downto b1_rounded'high - WL_VALUE_INT - 1 - 1 - res_0'high);
+    res_1 <= b0_rounded(b0_rounded'high - WL_VALUE_INT - 1 - 1 downto b0_rounded'high - WL_VALUE_INT - 1 - 1 - res_1'high);
 
 end architecture rtl;
 

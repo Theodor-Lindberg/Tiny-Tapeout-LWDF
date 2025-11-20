@@ -15,3 +15,9 @@ sim_build/
 *.csv
 *cpython*
 *.xml
+
+# GHDL build artifacts
+*.o
+*.cf
+test/tt_um_lwdf_top
+test/e~tt_um_lwdf_top.o
